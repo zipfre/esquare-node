@@ -27,8 +27,7 @@ app.use("/teacher",teacherRoute)
 
 app.post("/login", async (req, res) => {
   const { user_name, password } = req.body;
-  console.log(req.body);
-console.log(user_name,password);
+  console.log('body',req.body);
   try {
     found_user=await user.findOne({ user_name: user_name }).lean();
     if (!found_user) {

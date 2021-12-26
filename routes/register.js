@@ -18,12 +18,12 @@ router.post("/teacher", async (req, res) => {
     const savedUser = await user.save();
     //res.json(savedUser);
     const teacher = new Teacher({
-      first_name: req.body.username,
-      last_name: req.body.password,
-      national_id_no: req.body.type,
-      level: req.body.type,
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      national_id_no: req.body.national_id_no,
+      level: req.body.level,
       email: req.body.email,
-      phone_no: req.body.email,
+      phone_no: req.body.phone_no,
     });
 
     try {
@@ -62,9 +62,9 @@ router.post("/student", async (req, res) => {
 
     try {
       const savedStudent = await student.save();
-      //res.json(savedStudent);
+      res.json({message:"Student Created Successfully"});
     } catch (err) {
-      res.json({ message: err });
+      console.json({ message: err });
     }
   } catch (err) {
     res.json({ message: err });
