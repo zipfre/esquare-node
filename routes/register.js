@@ -6,25 +6,49 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 
 router.post("/teacher", async (req, res) => {
-  const user = new User({
-    user_name: req.body.username,
-    user_password: req.body.password,
-    type: req.body.type,
-  });
+  try {
+    const { user_name, user_password } = req.body;
+    const password = await bcrypt.hash(user_password, 5);
+
+    const user = new User({
+      user_name: user_name,
+      user_password: password,
+      type: "teacher",
+    });
+    const savedUser = await user.save();
+    //res.json(savedUser);
+    const teacher = new Teacher({
+      first_name: req.body.username,
+      last_name: req.body.password,
+      national_id_no: req.body.type,
+      level: req.body.type,
+      email: req.body.email,
+      phone_no: req.body.email,
+    });
+
+    try {
+      const savedTeacher = await teacher.save();
+      //res.json(savedStudent);
+    } catch (err) {
+      res.json({ message: err });
+    }
+  } catch (err) {
+    res.json({ message: err });
+  }
 });
 router.post("/student", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { user_name, user_password } = req.body;
   const password = await bcrypt.hash(user_password, 5);
   try {
-      console.log(user_name);
-      const user= new User({
-        user_name: user_name,
-        user_password: password,
-        type: "student",
-      })
-      const savedUser= await user.save();
-      //res.json(savedUser);
+    console.log(user_name);
+    const user = new User({
+      user_name: user_name,
+      user_password: password,
+      type: "student",
+    });
+    const savedUser = await user.save();
+    //res.json(savedUser);
     const student = new Student({
       first_name: req.body.first_name,
       last_name: req.body.last_name,
@@ -45,7 +69,6 @@ router.post("/student", async (req, res) => {
   } catch (err) {
     res.json({ message: err });
   }
- 
 });
 
 module.exports = router;

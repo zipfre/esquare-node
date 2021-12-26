@@ -10,7 +10,9 @@ require("dotenv/config");
 
 const userRoute = require("./routes/users.js");
 const registerRoute = require("./routes/register.js");
+const paymentRoute=require("./routes/payment.js");
 const user = require("./models/user.js");
+const teacherRoute = require("./routes/teacher.js");
 const JWT_SECRET = "!@$124!!wtr23$#^15lkslkflka1lk3jl15lksdflka";
 
 
@@ -19,6 +21,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use("/users", userRoute);
 app.use("/register", registerRoute);
+app.use("/payment",paymentRoute);
+app.use("/teacher",teacherRoute)
 
 
 app.post("/login", async (req, res) => {
