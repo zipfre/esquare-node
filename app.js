@@ -11,8 +11,10 @@ require("dotenv/config");
 const userRoute = require("./routes/users.js");
 const registerRoute = require("./routes/register.js");
 const paymentRoute=require("./routes/payment.js");
+const studentRoute=require("./routes/student.js");
 const user = require("./models/user.js");
 const teacherRoute = require("./routes/teacher.js");
+const student = require("./models/student.js");
 const JWT_SECRET = "!@$124!!wtr23$#^15lkslkflka1lk3jl15lksdflka";
 
 
@@ -22,7 +24,8 @@ app.use(bodyParser.json());
 app.use("/users", userRoute);
 app.use("/register", registerRoute);
 app.use("/payment",paymentRoute);
-app.use("/teacher",teacherRoute)
+app.use("/teacher",teacherRoute);
+app.use("/student",studentRoute)
 
 
 app.post("/login", async (req, res) => {

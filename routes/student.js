@@ -1,6 +1,8 @@
 const express = require("express");
 const Student = require("../models/student");
 const cors = require("../cors.js");
+const req = require("express/lib/request");
+const res = require("express/lib/response");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -11,6 +13,23 @@ router.get("/", async (req, res) => {
     res.json({ message: err });
   }
 });
+router.patch("/",async (req,res)=> {
+  
+  try{
+    const updatedStudent = await Student.updateOne(
+      { _id: req.body.student_id },
+      {
+        $set: { section:req.body.student_section}
+      }
+    );
+    res.json({message:"Successfully assgined class"});
+  }
+  catch(err)
+  {
+    res.json({message:err});
+  }
+});
+
 
 router.get("/:id", async (req, res) => {
   try {
@@ -21,8 +40,18 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/profile/:id", async (req, res) => {
+  try {
+    const student = await Student.findOne({user_name:req.params.id});
+    res.json(student);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
+
 router.post("/", async (req, res) => {
   const student = new Student({
+    user_name:req.body.user_name,
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     date_of_birth: req.body.date_of_birth,

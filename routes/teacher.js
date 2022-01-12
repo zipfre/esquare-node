@@ -20,15 +20,31 @@ router.get("/:id", async (req, res) => {
     res.json({ message: err });
   }
 });
-
+router.patch("/",async (req,res)=> {
+  try{
+    const updatedTeacher = await Teacher.updateOne(
+      { _id: req.body.teacher_id },
+      {
+        $set: { section:req.body.teacher_section}
+      }
+    );
+    console.log(updatedTeacher);
+    res.json({message:"Successfully assgined class"});
+  }
+  catch(err)
+  {
+    res.json({message:err});
+  }
+});
 router.post("/", async (req, res) => {
   const teacher = new Teacher({
-    first_name: req.body.username,
-    last_name: req.body.password,
-    national_id_no: req.body.type,
-    level:req.body.type,
+    user_name:req.body.user_name,
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    national_id_no: req.body.national_id_no,
+    level:req.body.level,
     email:req.body.email,
-    phone_no:req.body.email
+    phone_no:req.body.phone_no
   });
 
   try {
@@ -49,7 +65,7 @@ router.delete("/:id", async (req, res) => {
 router.patch("/:id", async (req, res) => {
   const updatedTeacher = await Teacher.updateOne(
     { _id: req.params.id },
-    { $set: {cv_file_path:req.body.file_path} }
+    { $set: {section:teacher_section} }
   );
 });
 module.exports = router;
