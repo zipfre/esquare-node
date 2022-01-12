@@ -36,6 +36,14 @@ router.patch("/",async (req,res)=> {
     res.json({message:err});
   }
 });
+router.get("/profile/:id", async (req, res) => {
+  try {
+    const teacher = await Teacher.findOne({user_name:req.params.id});
+    res.json(teacher);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
 router.post("/", async (req, res) => {
   const teacher = new Teacher({
     user_name:req.body.user_name,
