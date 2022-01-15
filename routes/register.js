@@ -16,6 +16,7 @@ router.post("/admin", async (req, res) => {
       type: "admin",
     });
     const savedUser = await user.save();
+    res.json({message:"Saved Successfully"})
   }
   catch(err){
     res.json({message:err});
