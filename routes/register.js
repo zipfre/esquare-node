@@ -27,7 +27,7 @@ router.post("/teacher", async (req, res) => {
   try {
     const { user_name, user_password } = req.body;
     const password = await bcrypt.hash(user_password, 5);
-    console.log(user_name,user_password);
+   // console.log(user_name,user_password);
     const user = new User({
       user_name: user_name,
       user_password: password,
@@ -43,14 +43,15 @@ router.post("/teacher", async (req, res) => {
       level: req.body.level,
       email: req.body.email,
       phone_no: req.body.phone_no,
-      cv_file_path:''
+      cv_file_path:'',
+      section:''
     });
 
     try {
       const savedTeacher = await teacher.save();
       res.json({message:"Saved Successfully",data:savedTeacher});
     } catch (err) {
-      console.log("err");
+      console.log(err);
       res.json({ message: err });
     }
   } catch (err) {
