@@ -8,15 +8,37 @@ const bcrypt = require("bcryptjs");
 router.post("/admin", async (req, res) => {
   try {
     const { user_name, user_password } = req.body;
-    const password = await bcrypt.hash(user_password, 5);
 
-    const user = new User({
-      user_name: user_name,
-      user_password: password,
-      type: "admin",
+    User.findOne({
+      where: {
+        username: user_name
+      }
+    }).then(user => {
+      if (user) {
+        res.status(400).send({
+          err:true,
+          message: "Failed! Username is already in use!"
+        });
+        return
+        
+      }
+      else{
+        async () =>{
+          const password = await bcrypt.hash(user_password, 5);
+
+          const user = new User({
+            user_name: user_name,
+            user_password: password,
+            type: "admin",
+          });
+          const savedUser = await user.save();
+          res.json({success:true,message:"Saved Successfully"})
+        }
+       
+      }
     });
-    const savedUser = await user.save();
-    res.json({message:"Saved Successfully"})
+ 
+    
   }
   catch(err){
     res.json({message:err});

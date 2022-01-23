@@ -5,9 +5,11 @@ const Teacher = require("../models/teacher");
 const cors = require("../cors.js");
 const router = express.Router();
 const app=express();
+const jwt = require("jsonwebtoken");
 
 //app.use(cors());
 router.get("/", async (req, res) => {
+
   try {
     const users = await User.find();
     res.json(users);

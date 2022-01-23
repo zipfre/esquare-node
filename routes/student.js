@@ -1,11 +1,9 @@
 const express = require("express");
 const Student = require("../models/student");
-const cors = require("../cors.js");
-const req = require("express/lib/request");
-const res = require("express/lib/response");
+const authJwt= require("../auth/authJWT");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/",[authJwt.verifyToken], async (req, res) => {
   try {
     const students = await Student.find();
     res.json(students);
