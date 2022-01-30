@@ -9,39 +9,34 @@ router.post("/admin", async (req, res) => {
   try {
     const { user_name, user_password } = req.body;
 
-    User.findOne({
-      where: {
-        username: user_name
-      }
-    }).then(user => {
-      if (user) {
-        res.status(400).send({
-          err:true,
-          message: "Failed! Username is already in use!"
-        });
-        return
-        
-      }
-      else{
-        async () =>{
-          const password = await bcrypt.hash(user_password, 5);
-
-          const user = new User({
-            user_name: user_name,
-            user_password: password,
-            type: "admin",
-          });
-          const savedUser = await user.save();
-          res.json({success:true,message:"Saved Successfully"})
-        }
-       
-      }
+    const user = await User.findOne({
+      user_name: user_name,
     });
- 
+    console.log("user", user);
+    if (user) {
+      console.log("user err", err);
+      res.status(400).send({
+        success: false,
+        user: user,
+        message: "Failed! Username is already in use!",
+      });
+    } else {
     
-  }
-  catch(err){
-    res.json({message:err});
+        const password = await bcrypt.hash(user_password, 5);
+
+        const userNew = new User({
+          user_name: user_name,
+          user_password: password,
+          type: "admin",
+        });
+        console.log(userNew, "new");
+        const savedUser = await userNew.save();
+        res.json({ success: true, message: "Saved Successfully" });
+     
+   }
+  } catch (err) {
+    console.log(err);
+    res.json({ message: err });
   }
 });
 
@@ -49,7 +44,7 @@ router.post("/teacher", async (req, res) => {
   try {
     const { user_name, user_password } = req.body;
     const password = await bcrypt.hash(user_password, 5);
-   // console.log(user_name,user_password);
+    // console.log(user_name,user_password);
     const user = new User({
       user_name: user_name,
       user_password: password,
@@ -58,20 +53,20 @@ router.post("/teacher", async (req, res) => {
     const savedUser = await user.save();
     //res.json(savedUser);
     const teacher = new Teacher({
-      user_name:req.body.user_name,
+      user_name: req.body.user_name,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       national_id_no: req.body.national_id_no,
       level: req.body.level,
       email: req.body.email,
       phone_no: req.body.phone_no,
-      cv_file_path:'',
-      section:''
+      cv_file_path: "",
+      section: "",
     });
 
     try {
       const savedTeacher = await teacher.save();
-      res.json({message:"Saved Successfully",data:savedTeacher});
+      res.json({ message: "Saved Successfully", data: savedTeacher });
     } catch (err) {
       console.log(err);
       res.json({ message: err });
@@ -95,7 +90,7 @@ router.post("/student", async (req, res) => {
     const savedUser = await user.save();
     //res.json(savedUser);
     const student = new Student({
-      user_name:req.body.user_name,
+      user_name: req.body.user_name,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       date_of_birth: req.body.date_of_birth,
@@ -108,7 +103,7 @@ router.post("/student", async (req, res) => {
 
     try {
       const savedStudent = await student.save();
-      res.json({message:"Student Created Successfully"});
+      res.json({ message: "Student Created Successfully" });
     } catch (err) {
       console.json({ message: err });
     }
