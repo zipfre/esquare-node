@@ -69,11 +69,12 @@ router.post("/teacher", async (req, res) => {
       res.json({ message: "Saved Successfully", data: savedTeacher });
     } catch (err) {
       console.log(err);
-      res.json({ message: err });
+      const removedTeacher = await User.deleteOne({ user_name: req.body.user_name});
+      res.json({ status:'success',message: err });
     }
   } catch (err) {
-    console.log("errr11");
-    res.json({ message: err });
+    console.log("errr11",err);
+    res.json({ status:'error',message: err });
   }
 });
 router.post("/student", async (req, res) => {
