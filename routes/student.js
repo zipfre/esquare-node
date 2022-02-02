@@ -3,7 +3,7 @@ const Student = require("../models/student");
 const authJwt= require("../auth/authJWT");
 const router = express.Router();
 
-router.get("/",[authJwt.verifyToken], async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const students = await Student.find();
     res.json(students);
