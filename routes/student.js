@@ -1,6 +1,7 @@
 const express = require("express");
 const Student = require("../models/student");
 const authJwt= require("../auth/authJWT");
+const user = require("../models/user");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -70,6 +71,7 @@ router.post("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const removedStudent = await Student.deleteOne({ _id: req.params.id });
+   // const removedUser =await user.delete({})
     res.json(removedStudent);
   } catch (err) {
     res.send({ message: err });

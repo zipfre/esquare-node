@@ -4,9 +4,27 @@ const Student = require("../models/student");
 const Teacher = require("../models/teacher");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const multer= require('multer');
 
-router.post("/admin", async (req, res) => {
+
+const storage=multer.diskStorage({
+  destination:(req,file,callBack) =>{
+    callBack(null,"uploads/")
+  },
+  filename:(req,file,callBack)=>{
+    console.log(file.fieldname,"filename");
+    callBack(null,file.fieldname + '-' + Date.now() + ".pdf");
+  }
+});
+const upload=multer({storage:storage});
+router.post("/file",upload.single('file'),(req, res) => {
+console.log(req.file.filename);
+
+});
+
+router.post("/admin",async (req, res) => {
   try {
+   
     const { user_name, user_password } = req.body;
 
     const user = await User.findOne({
@@ -40,8 +58,9 @@ router.post("/admin", async (req, res) => {
   }
 });
 
-router.post("/teacher", async (req, res) => {
+router.post("/teacher",upload.single('cv'),async (req, res) => {
   try {
+    console.log(req.body,"body");
     const { user_name, user_password } = req.body;
     const password = await bcrypt.hash(user_password, 5);
     // console.log(user_name,user_password);
@@ -60,20 +79,22 @@ router.post("/teacher", async (req, res) => {
       level: req.body.level,
       email: req.body.email,
       phone_no: req.body.phone_no,
-      cv_file_path: "",
+      cv_file_path: 'uploads/'+req.cv.filename,
       section: "",
     });
 
     try {
       const savedTeacher = await teacher.save();
-      res.json({ message: "Saved Successfully", data: savedTeacher });
+     // res.json({ message: "Saved Successfully", data: savedTeacher });
+      res.json({ status:'success',message: "Saved Successfully" });
     } catch (err) {
       console.log(err);
       const removedTeacher = await User.deleteOne({ user_name: req.body.user_name});
-      res.json({ status:'success',message: err });
+    res.json({ status:'error',message: err });
+     
     }
   } catch (err) {
-    console.log("errr11",err);
+    console.log("Error User/Teacher registration",err);
     res.json({ status:'error',message: err });
   }
 });
