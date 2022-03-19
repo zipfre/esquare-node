@@ -43,9 +43,9 @@ router.get("/:id",async (req, res) => {
 router.get("/profile/:id", async (req, res) => {
   try {
     const student = await Student.findOne({user_name:req.params.id}).lean();
-    clasLink = getClassLink(student.first_name,student.last_name,student.level,student.section)
-    console.log(clasLink)
-    studentwithClass = {...student,clasLink}
+    classLink = getClassLink(student.first_name,student.last_name,student.level,student.section)
+    console.log(classLink)
+    studentwithClass = {...student,classLink}
     res.json(studentwithClass);
   } catch (err) {
     console.log("Error"+err);
@@ -57,7 +57,7 @@ function getClassLink(fname , lname, level, section){
   const apiCmd = 'join';
   const userUname = fname+"-"+lname+"-"+Math.random(5);
   const url = "https://bbbdev.esquare-homeschooling.com/bigbluebutton/api/"
-  var addr = `fullName=${userUname}&meetingID=random-7321740&password=ap&redirect=true`;
+  var addr = `fullName=${userUname}&meetingID=`+encodeURIComponent(level+"-"+section)+`&password=esquare&redirect=true`;
   console.log(apiCmd+addr);
   var checksum = crypto.createHash('sha1').update(apiCmd+addr+secret).digest("hex")
   var meetingLink = url+apiCmd+"?"+addr+"&checksum="+checksum;
